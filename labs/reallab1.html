@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторная работа №1 - Расчёт вероятности проникновения</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid #e9ecef;
+        }
+
+        .panel h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 20px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        }
+
+        #canvas-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        canvas {
+            width: 100%;
+            display: block;
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-card.critical {
+            border-left-color: #e74c3c;
+            background: #fdf2f2;
+        }
+
+        .result-card.success {
+            border-left-color: #27ae60;
+            background: #f0f9f4;
+        }
+
+        .result-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .result-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .result-card.critical .result-value {
+            color: #e74c3c;
+        }
+
+        .result-card.success .result-value {
+            color: #27ae60;
+        }
+
+        .formula-box {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #3498db;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .info-box {
+            background: #e8f4fd;
+            border: 1px solid #b3d9ff;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #2c5282;
+        }
+
+        .info-box strong {
+            color: #1a365d;
+        }
+
+        .constants-display {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .constant-item {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .constant-item .label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .constant-item .value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #3498db;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🔐 Лабораторная работа №1</h1>
+            <p>Расчёт вероятности проникновения злоумышленника на объект хранения информации</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Левая панель - Ввод данных -->
+            <div class="panel">
+                <h2>📋 Исходные данные</h2>
+
+                <div class="info-box">
+                    <strong>Задание:</strong> Забор X<sub>заб</sub> разбивается на n=100 участков.
+                    Для каждого участка рассчитывается вероятность проникновения через окна.
+                    В полученном массиве найти минимум.
+                </div>
+
+                <div class="constants-display">
+                    <div class="constant-item">
+                        <div class="label">Коэффициент k₁</div>
+                        <div class="value" id="k1-display">2</div>
+                    </div>
+                    <div class="constant-item">
+                        <div class="label">Коэффициент k₂</div>
+                        <div class="value" id="k2-display">0.5</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">
+                    <strong>Формула расчёта:</strong><br>
+                    P<sub>i1</sub> = k₁ × P<sub>ок1</sub><sup>k₂</sup> × l₁₁ × l₁₂<br>
+                    P<sub>i2</sub> = k₁ × P<sub>ок2</sub><sup>k₂</sup> × l₂₁ × l₂₂
+                </div>
+
+                <div class="input-group">
+                    <label>📍 Координаты цели (информация):</label>
+                    <div class="input-row">
+                        <input type="number" id="x-info" value="25" placeholder="X" min="0" max="50">
+                        <input type="number" id="y-info" value="25" placeholder="Y" min="0" max="50">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>🪟 Окно 1:</label>
+                    <div class="input-row">
+                        <input type="number" id="x-win1" value="10" placeholder="X" min="0" max="50">
+                        <input type="number" id="y-win1" value="25" placeholder="Y" min="0" max="50">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>🪟 Окно 2:</label>
+                    <div class="input-row">
+                        <input type="number" id="x-win2" value="40" placeholder="X" min="0" max="50">
+                        <input type="number" id="y-win2" value="25" placeholder="Y" min="0" max="50">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>📊 Вероятности проникновения через окна:</label>
+                    <div class="input-row">
+                        <input type="number" id="p-win1" value="0.3" placeholder="P ок1" step="0.01" min="0" max="1">
+                        <input type="number" id="p-win2" value="0.4" placeholder="P ок2" step="0.01" min="0" max="1">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>📏 Размеры забора:</label>
+                    <div class="input-row">
+                        <input type="number" id="fence-x" value="50" placeholder="X макс" min="1" max="100">
+                        <input type="number" id="fence-y" value="50" placeholder="Y макс" min="1" max="100">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>🔢 Количество участков забора:</label>
+                    <input type="number" id="fence-segments" value="100" min="10" max="500">
+                </div>
+
+                <button class="btn" onclick="calculate()">🧮 Рассчитать вероятность</button>
+                <button class="btn btn-secondary" onclick="resetDefaults()">🔄 Сбросить к значениям по
+                    умолчанию</button>
+            </div>
+
+            <!-- Правая панель - Результаты и визуализация -->
+            <div class="panel">
+                <h2>📊 Результаты расчёта</h2>
+
+                <div id="results-container">
+                    <div class="result-card">
+                        <h3>🎯 Минимальная вероятность проникновения</h3>
+                        <div class="result-value" id="min-probability">—</div>
+                        <p style="margin-top: 10px; color: #666; font-size: 13px;">
+                            Участок забора: <span id="min-segment">—</span>
+                        </p>
+                    </div>
+
+                    <div class="result-card success">
+                        <h3>📈 Максимальная вероятность</h3>
+                        <div class="result-value" id="max-probability">—</div>
+                        <p style="margin-top: 10px; color: #666; font-size: 13px;">
+                            Участок забора: <span id="max-segment">—</span>
+                        </p>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>📋 Среднее значение</h3>
+                        <div class="result-value" id="avg-probability">—</div>
+                    </div>
+                </div>
+
+                <div id="canvas-container">
+                    <canvas id="facilityCanvas" width="500" height="500"></canvas>
+                </div>
+
+                <div class="table-container">
+                    <h3 style="margin: 20px 0 10px; color: #2c3e50;">📄 Таблица результатов (первые 20 участков)</h3>
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th>Участок</th>
+                                <th>X</th>
+                                <th>Y</th>
+                                <th>P через окно 1</th>
+                                <th>P через окно 2</th>
+                                <th>Минимум</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <tr>
+                                <td colspan="6">Нажмите "Рассчитать" для получения данных</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Константы из методических указаний
+        const K1 = 2;
+        const K2 = 0.5;
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function () {
+            drawFacility();
+            calculate();
+        });
+
+        // Функция расчёта расстояния между двумя точками
+        function calculateDistance(x1, y1, x2, y2) {
+            return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        }
+
+        // Основная функция расчёта вероятности
+        function calculate() {
+            // Получение входных данных
+            const xInfo = parseFloat(document.getElementById('x-info').value);
+            const yInfo = parseFloat(document.getElementById('y-info').value);
+            const xWin1 = parseFloat(document.getElementById('x-win1').value);
+            const yWin1 = parseFloat(document.getElementById('y-win1').value);
+            const xWin2 = parseFloat(document.getElementById('x-win2').value);
+            const yWin2 = parseFloat(document.getElementById('y-win2').value);
+            const pWin1 = parseFloat(document.getElementById('p-win1').value);
+            const pWin2 = parseFloat(document.getElementById('p-win2').value);
+            const fenceX = parseFloat(document.getElementById('fence-x').value);
+            const fenceY = parseFloat(document.getElementById('fence-y').value);
+            const segments = parseInt(document.getElementById('fence-segments').value);
+
+            // Массивы для хранения результатов
+            const results = [];
+            let minProbability = Infinity;
+            let maxProbability = 0;
+            let minSegment = 0;
+            let maxSegment = 0;
+            let totalProbability = 0;
+
+            // Расчёт для каждого участка забора
+            for (let i = 0; i < segments; i++) {
+                // Координаты участка на заборе (распределяем по периметру)
+                const perimeter = 2 * (fenceX + fenceY);
+                const segmentLength = perimeter / segments;
+                const position = i * segmentLength;
+
+                let x, y;
+                if (position < fenceX) {
+                    // Нижняя сторона
+                    x = position;
+                    y = 0;
+                } else if (position < fenceX + fenceY) {
+                    // Правая сторона
+                    x = fenceX;
+                    y = position - fenceX;
+                } else if (position < 2 * fenceX + fenceY) {
+                    // Верхняя сторона
+                    x = fenceX - (position - fenceX - fenceY);
+                    y = fenceY;
+                } else {
+                    // Левая сторона
+                    x = 0;
+                    y = fenceY - (position - 2 * fenceX - fenceY);
+                }
+
+                // Расстояния до окон
+                const l1_1 = calculateDistance(x, y, xWin1, yWin1);
+                const l1_2 = calculateDistance(xWin1, yWin1, xInfo, yInfo);
+                const l2_1 = calculateDistance(x, y, xWin2, yWin2);
+                const l2_2 = calculateDistance(xWin2, yWin2, xInfo, yInfo);
+
+                // Расчёт вероятностей по формуле из методички
+                // const p1 = K1 * Math.pow(pWin1, K2) * l1_1 * l1_2;
+                // const p2 = K1 * Math.pow(pWin2, K2) * l2_1 * l2_2;
+                const p1 = K1 / l1_1 + K2 / l1_2;
+                const p2 = K1 / l2_1 + K2 / l2_2;
+                const minP = Math.min(p1, p2);
+
+                results.push({
+                    segment: i + 1,
+                    x: x.toFixed(2),
+                    y: y.toFixed(2),
+                    p1: p1.toFixed(4),
+                    p2: p2.toFixed(4),
+                    minP: minP.toFixed(4)
+                });
+
+                // Поиск минимума и максимума
+                if (minP < minProbability) {
+                    minProbability = minP;
+                    minSegment = i + 1;
+                }
+                if (minP > maxProbability) {
+                    maxProbability = minP;
+                    maxSegment = i + 1;
+                }
+
+                totalProbability += minP;
+            }
+
+            const avgProbability = totalProbability / segments;
+
+            // Обновление результатов на странице
+            document.getElementById('min-probability').textContent = minProbability.toFixed(4);
+            document.getElementById('min-segment').textContent = minSegment;
+            document.getElementById('max-probability').textContent = maxProbability.toFixed(4);
+            document.getElementById('max-segment').textContent = maxSegment;
+            document.getElementById('avg-probability').textContent = avgProbability.toFixed(4);
+
+            // Обновление таблицы
+            updateTable(results.slice(0, 20));
+
+            // Перерисовка схемы
+            drawFacility(xWin1, yWin1, xWin2, yWin2, xInfo, yInfo, fenceX, fenceY, results);
+        }
+
+        // Обновление таблицы результатов
+        function updateTable(results) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            results.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.segment}</td>
+                    <td>${row.x}</td>
+                    <td>${row.y}</td>
+                    <td>${row.p1}</td>
+                    <td>${row.p2}</td>
+                    <td><strong>${row.minP}</strong></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Отрисовка схемы объекта
+        function drawFacility(xWin1 = 10, yWin1 = 25, xWin2 = 40, yWin2 = 25,
+            xInfo = 25, yInfo = 25, fenceX = 50, fenceY = 50, results = null) {
+            const canvas = document.getElementById('facilityCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+
+            // Очистка
+            ctx.clearRect(0, 0, width, height);
+
+            // Масштабирование
+            const scaleX = width / (fenceX + 10);
+            const scaleY = height / (fenceY + 10);
+            const scale = Math.min(scaleX, scaleY);
+            const offsetX = 30;
+            const offsetY = height - 30;
+
+            // Функция преобразования координат
+            function toCanvas(x, y) {
+                return {
+                    x: offsetX + x * scale,
+                    y: offsetY - y * scale
+                };
+            }
+
+            // Рисуем сетку
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= fenceX; i += 10) {
+                const pos = toCanvas(i, 0);
+                ctx.beginPath();
+                ctx.moveTo(pos.x, offsetY);
+                ctx.lineTo(pos.x, offsetY - fenceY * scale);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= fenceY; i += 10) {
+                const pos = toCanvas(0, i);
+                ctx.beginPath();
+                ctx.moveTo(offsetX, pos.y);
+                ctx.lineTo(offsetX + fenceX * scale, pos.y);
+                ctx.stroke();
+            }
+
+            // Рисуем забор
+            const fencePoints = [
+                toCanvas(0, 0),
+                toCanvas(fenceX, 0),
+                toCanvas(fenceX, fenceY),
+                toCanvas(0, fenceY)
+            ];
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(fencePoints[0].x, fencePoints[0].y);
+            fencePoints.forEach(p => ctx.lineTo(p.x, p.y));
+            ctx.closePath();
+            ctx.stroke();
+
+            // Рисуем окна
+            ctx.fillStyle = '#3498db';
+            const win1 = toCanvas(xWin1, yWin1);
+            const win2 = toCanvas(xWin2, yWin2);
+            ctx.beginPath();
+            ctx.arc(win1.x, win1.y, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(win2.x, win2.y, 8, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Подписи окон
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = '12px Arial';
+            ctx.fillText('Окно 1', win1.x - 25, win1.y - 15);
+            ctx.fillText('Окно 2', win2.x - 25, win2.y - 15);
+
+            // Рисуем цель (информация)
+            const info = toCanvas(xInfo, yInfo);
+            ctx.fillStyle = '#e74c3c';
+            ctx.beginPath();
+            ctx.arc(info.x, info.y, 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillText('Цель', info.x - 15, info.y - 15);
+
+            // Рисуем линии расстояний (для первого и последнего участка)
+            if (results && results.length > 0) {
+                ctx.strokeStyle = '#95a5a6';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([5, 5]);
+
+                // Линии от первого участка
+                const firstSeg = results[0];
+                const firstPos = toCanvas(parseFloat(firstSeg.x), parseFloat(firstSeg.y));
+                ctx.beginPath();
+                ctx.moveTo(firstPos.x, firstPos.y);
+                ctx.lineTo(win1.x, win1.y);
+                ctx.lineTo(info.x, info.y);
+                ctx.stroke();
+
+                // Линии от участка с минимальной вероятностью
+                const minSeg = results.find(r => r.minP === document.getElementById('min-probability').textContent);
+                if (minSeg) {
+                    const minPos = toCanvas(parseFloat(minSeg.x), parseFloat(minSeg.y));
+                    ctx.strokeStyle = '#27ae60';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(minPos.x, minPos.y);
+                    ctx.lineTo(win1.x, win1.y);
+                    ctx.lineTo(info.x, info.y);
+                    ctx.stroke();
+                }
+
+                ctx.setLineDash([]);
+            }
+
+            // Оси координат
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(offsetX - 20, offsetY);
+            ctx.lineTo(offsetX + fenceX * scale + 20, offsetY);
+            ctx.moveTo(offsetX, offsetY + 20);
+            ctx.lineTo(offsetX, offsetY - fenceY * scale - 20);
+            ctx.stroke();
+
+            // Подписи осей
+            ctx.font = '14px Arial';
+            ctx.fillText('X', offsetX + fenceX * scale + 30, offsetY);
+            ctx.fillText('Y', offsetX - 20, offsetY - fenceY * scale - 30);
+        }
+
+        // Сброс к значениям по умолчанию
+        function resetDefaults() {
+            document.getElementById('x-info').value = 25;
+            document.getElementById('y-info').value = 25;
+            document.getElementById('x-win1').value = 10;
+            document.getElementById('y-win1').value = 25;
+            document.getElementById('x-win2').value = 40;
+            document.getElementById('y-win2').value = 25;
+            document.getElementById('p-win1').value = 0.3;
+            document.getElementById('p-win2').value = 0.4;
+            document.getElementById('fence-x').value = 50;
+            document.getElementById('fence-y').value = 50;
+            document.getElementById('fence-segments').value = 100;
+            calculate();
+        }
+    </script>
+</body>
+
+</html>

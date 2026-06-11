@@ -1,43 +1,43 @@
 import streamlit as st
 import pandas as pd
 
-# Set up the dashboard layout
+# 1. Setup the dashboard layout
 st.set_page_config(page_title="Universal Sales DSS", layout="wide")
 st.title("📊 Universal Sales Decision Support System")
 
-# 1. Universal Data Loader
+# 2. Universal Data Loader
 @st.cache_data
 def load_data(file_path):
     # Load the CSV
     df = pd.read_csv(file_path)
-    # Strip whitespace from column names to prevent matching errors
+    # Strip whitespace from column names to prevent errors
     df.columns = df.columns.str.strip()
     return df
 
+# 3. Sidebar for File Upload (Enables Global Use)
+st.sidebar.header("Data Upload")
+uploaded_file = st.sidebar.file_uploader("Upload your sales CSV", type=["csv"])
+
 try:
-    # Load the file
-    df = load_data("sales_data.csv")
+    if uploaded_file is not None:
+        # Use uploaded file
+        df = load_data(uploaded_file)
+    else:
+        # Fallback to local file if no upload
+        df = load_data("sales_data.csv")
     
-    # 2. Dynamic Column Classification
-    # Identifies labels (text) and metrics (numbers) automatically
+    # 4. Dynamic Column Classification
     cat_cols = df.select_dtypes(include=['object']).columns.tolist()
     num_cols = df.select_dtypes(include=['number']).columns.tolist()
     
     st.sidebar.header("Configuration")
-    
-    # User selects the identifier column (e.g., 'Product')
     selected_label = st.sidebar.selectbox("Select Item/Category Column", cat_cols)
-    
-    # User selects the months/metrics to analyze
     selected_metrics = st.sidebar.multiselect("Select Metric Columns", num_cols, default=num_cols)
     
-    # 3. Calculation Logic
-    # Calculate performance for each item based on selected columns
+    # 5. Calculation Logic
     df['Total_Performance'] = df[selected_metrics].sum(axis=1)
     
     st.subheader("Performance Overview")
-    
-    # Split UI into two sections
     col1, col2 = st.columns([1, 2])
     
     with col1:
@@ -49,14 +49,11 @@ try:
         ranking = df.groupby(selected_label)['Total_Performance'].sum().sort_values(ascending=False)
         st.bar_chart(ranking)
     
-    # 4. Actionable Decision Support
+    # 6. Actionable Decision Support
     st.subheader("Decision Support Engine")
-    
-    # Logic: Identify the best performer
     best_item = ranking.idxmax()
     st.success(f"**Top Performer:** '{best_item}' has the highest aggregate sales.")
     
-    # Logic: Identify underperformers (below the average performance)
     avg_performance = ranking.mean()
     underperformers = ranking[ranking < avg_performance]
     
@@ -67,7 +64,6 @@ try:
     else:
         st.success("All items are performing above average.")
 
-except FileNotFoundError:
-    st.error("File 'sales_data.csv' not found. Please place it in the same directory as 'Stupidai.py'.")
 except Exception as e:
-    st.error(f"An unexpected error occurred: {e}")
+    st.error(f"Error: {e}")
+    st.info("Please ensure your CSV is formatted with column headers.")

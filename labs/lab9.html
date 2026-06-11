@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лаб 9 — Одноразовая система шифрования</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00d9ff;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .formula {
+            background: rgba(0, 217, 255, 0.15);
+            border-left: 4px solid #00d9ff;
+            padding: 12px 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #ccc;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #444;
+            border-radius: 6px;
+            background: #1a1a2e;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .input-group textarea {
+            min-height: 60px;
+            resize: vertical;
+            font-family: monospace;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        button {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-encrypt {
+            background: #27ae60;
+            color: #fff;
+        }
+
+        .btn-decrypt {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        .btn-clear {
+            background: #555;
+            color: #fff;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .result-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .result-box label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00d9ff;
+            font-weight: 600;
+        }
+
+        .result-box textarea {
+            width: 100%;
+            min-height: 50px;
+            padding: 10px;
+            border: 2px solid #444;
+            border-radius: 6px;
+            background: #1a1a2e;
+            color: #fff;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .error {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid #e74c3c;
+            color: #ff6b6b;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .alphabet {
+            display: grid;
+            grid-template-columns: repeat(16, 1fr);
+            gap: 3px;
+            margin: 15px 0;
+            font-size: 11px;
+        }
+
+        .alphabet-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .alphabet-item .num {
+            color: #00d9ff;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .alphabet {
+                grid-template-columns: repeat(8, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔐 Одноразовая система шифрования</h1>
+        <p class="subtitle">Лабораторная работа №9</p>
+
+        <div class="formula">
+            <strong>Шифрование:</strong> Yi = (Xi + Ki) mod 32<br>
+            <strong>Расшифрование:</strong> Xi = (Yi - Ki + 32) mod 32
+        </div>
+
+        <div class="alphabet" id="alphabetGrid"></div>
+
+        <div class="input-group">
+            <label>📝 Исходный текст:</label>
+            <textarea id="inputText" placeholder="Введите текст на русском...">ПРИВЕТ МИР</textarea>
+        </div>
+
+        <div class="input-group">
+            <label>🔑 Ключ (числовая последовательность):</label>
+            <textarea id="keyText" placeholder="Ключ генерируется автоматически..." readonly></textarea>
+        </div>
+
+        <div class="error" id="errorMsg"></div>
+
+        <div class="btn-group">
+            <button class="btn-encrypt" onclick="process('encrypt')">🔐 Зашифровать</button>
+            <button class="btn-decrypt" onclick="process('decrypt')">🔓 Расшифровать</button>
+            <button class="btn-clear" onclick="clearAll()">🗑️ Очистить</button>
+        </div>
+
+        <div class="result-box">
+            <label>✨ Результат:</label>
+            <textarea id="outputText" readonly></textarea>
+        </div>
+
+        <div class="result-box">
+            <label>📊 Детали (первые 15 символов):</label>
+            <textarea id="detailsText" readonly style="min-height:120px;"></textarea>
+        </div>
+    </div>
+
+    <script>
+        const ALPHABET = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ ';
+        const M = 32;
+
+        function initAlphabet() {
+            const grid = document.getElementById('alphabetGrid');
+            grid.innerHTML = '';
+            for (let i = 0; i < ALPHABET.length; i++) {
+                const item = document.createElement('div');
+                item.className = 'alphabet-item';
+                item.innerHTML = `<div class="num">${i}</div><div>${ALPHABET[i] === ' ' ? '␣' : ALPHABET[i]}</div>`;
+                grid.appendChild(item);
+            }
+        }
+
+        function normalizeText(text) {
+            return text.toUpperCase().replace(/Ё/g, 'Е').replace(/Й/g, 'И').replace(/[^А-Я ]/g, '');
+        }
+
+        function generateKey(length) {
+            return Array.from({ length }, () => Math.floor(Math.random() * M));
+        }
+
+        function encrypt(X, K) {
+            return X.map((x, i) => (x + K[i]) % M);
+        }
+
+        function decrypt(Y, K) {
+            return Y.map((y, i) => ((y - K[i]) % M + M) % M);
+        }
+
+        function process(mode) {
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.style.display = 'none';
+
+            let input;
+            if (mode === 'decrypt') {
+                input = document.getElementById('outputText').value;
+            }
+            else {
+                input = document.getElementById('inputText').value;
+            }
+            const normalized = normalizeText(input);
+
+            if (!normalized) {
+                errorMsg.textContent = '❌ Введите текст с русскими буквами';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            const X = normalized.split('').map(c => ALPHABET.indexOf(c));
+            let K, Y, result;
+
+            if (mode === 'encrypt') {
+                K = generateKey(X.length);
+                Y = encrypt(X, K);
+                result = Y.map(i => ALPHABET[i]).join('');
+                document.getElementById('keyText').value = K.join(' ');
+            } else {
+                const keyStr = document.getElementById('keyText').value.trim();
+                if (!keyStr) {
+                    errorMsg.textContent = '❌ Введите или сгенерируйте ключ';
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+                K = keyStr.split(/\s+/).map(Number);
+                if (K.length !== X.length) {
+                    errorMsg.textContent = `❌ Длина ключа (${K.length}) не совпадает с текстом (${X.length})`;
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+                Y = X;
+                result = decrypt(Y, K).map(i => ALPHABET[i]).join('');
+            }
+
+            document.getElementById('outputText').value = result;
+
+            let details = `Режим: ${mode === 'encrypt' ? 'ШИФРОВАНИЕ' : 'РАСШИФРОВАНИЕ'}\n`;
+            details += `Длина: ${X.length} символов\n\n`;
+            details += `№ | Буква | Код | Ключ | Формула | Результат\n`;
+            details += `${'─'.repeat(50)}\n`;
+
+            for (let i = 0; i < Math.min(X.length, 15); i++) {
+                const formula = mode === 'encrypt'
+                    ? `(${X[i]}+${K[i]}) mod ${M} = ${Y[i]}`
+                    : `(${X[i]}-${K[i]}+${M}) mod ${M} = ${Y[i]}`;
+                details += `${(i + 1).toString().padStart(2)} | ${normalized[i].padStart(5)} | ${X[i].toString().padStart(3)} | ${K[i].toString().padStart(4)} | ${formula.padStart(18)} | ${ALPHABET[Y[i]]}\n`;
+            }
+
+            if (X.length > 15) details += `\n... и ещё ${X.length - 15} символов`;
+            document.getElementById('detailsText').value = details;
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('keyText').value = '';
+            document.getElementById('outputText').value = '';
+            document.getElementById('detailsText').value = '';
+            document.getElementById('errorMsg').style.display = 'none';
+        }
+
+        initAlphabet();
+    </script>
+</body>
+
+</html>

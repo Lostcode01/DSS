@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторная работа №7 — Шифр Гронсфельда</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #f39c12;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .formula {
+            background: rgba(243, 156, 18, 0.15);
+            border-left: 4px solid #f39c12;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .formula strong {
+            color: #f39c12;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #ccc;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #555;
+            border-radius: 8px;
+            background: #1a1a2e;
+            color: #fff;
+            font-size: 16px;
+            font-family: monospace;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #f39c12;
+        }
+
+        .input-group input::placeholder {
+            color: #777;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-encrypt {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: #fff;
+        }
+
+        .btn-decrypt {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: #fff;
+        }
+
+        .btn-clear {
+            background: #555;
+            color: #fff;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(243, 156, 18, 0.3);
+        }
+
+        .result-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .result-box label {
+            display: block;
+            margin-bottom: 8px;
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        .result-box textarea {
+            width: 100%;
+            min-height: 60px;
+            padding: 12px;
+            border: 2px solid #555;
+            border-radius: 8px;
+            background: #1a1a2e;
+            color: #fff;
+            font-family: monospace;
+            resize: vertical;
+        }
+
+        .error {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid #e74c3c;
+            color: #ff6b6b;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .alphabet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(45px, 1fr));
+            gap: 5px;
+            margin: 20px 0;
+            font-size: 11px;
+        }
+
+        .alphabet-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 4px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .alphabet-item .num {
+            color: #f39c12;
+            font-weight: bold;
+            font-size: 10px;
+        }
+
+        .alphabet-item .char {
+            font-size: 16px;
+            margin-top: 2px;
+        }
+
+        .info {
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .info code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #f39c12;
+        }
+
+        .step-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 12px;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .step-table th,
+        .step-table td {
+            border: 1px solid #555;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .step-table th {
+            background: rgba(243, 156, 18, 0.3);
+            color: #f39c12;
+        }
+
+        .step-table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .key-display {
+            display: flex;
+            gap: 3px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+
+        .key-digit {
+            background: #f39c12;
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔐 Шифр Гронсфельда</h1>
+        <p class="subtitle">Лабораторная работа №7 — Шифры сложной замены</p>
+
+        <div class="formula">
+            <strong>Шифрование:</strong> T₁ = (T + K) mod 32<br>
+            <strong>Расшифрование:</strong> T = (T₁ − K + 32) mod 32<br>
+            <small>где T — номер буквы, K — цифра ключа (0-9), 32 — размер алфавита</small>
+        </div>
+
+        <div class="info">
+            <strong>📋 Алфавит (32 символа):</strong><br>
+            А=0, Б=1, В=2, Г=3, Д=4, Е=5, Ж=6, З=7, И=8, К=9, Л=10, М=11, Н=12, О=13,<br>
+            П=14, Р=15, С=16, Т=17, У=18, Ф=19, Х=20, Ц=21, Ч=22, Ш=23, Щ=24, Ъ=25,<br>
+            Ы=26, Ь=27, Э=28, Ю=29, Я=30, ␣=31 (пробел)<br><br>
+            <strong>💡 Подсказка:</strong> Ключ — последовательность цифр 0-9 (например: <code>2718</code> — первые
+            цифры числа e)
+        </div>
+
+        <div class="alphabet-grid" id="alphabetGrid"></div>
+
+        <div class="input-group">
+            <div style="grid-column: 1/-1;">
+                <label>🔑 Числовой ключ (цифры 0-9):</label>
+                <input type="text" id="keyInput" placeholder="Введите ключ, например: 2718" value="2718" maxlength="50">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <div style="grid-column: 1/-1;">
+                <label>📝 Исходный текст:</label>
+                <input type="text" id="inputText" placeholder="Введите текст на русском (заглавные буквы)..."
+                    value="ВОСТОЧНЫЙ ЭКСПРЕСС">
+            </div>
+        </div>
+
+        <div class="error" id="errorMsg"></div>
+
+        <div class="btn-group">
+            <button class="btn-encrypt" onclick="process('encrypt')">🔐 Зашифровать</button>
+            <button class="btn-decrypt" onclick="process('decrypt')">🔓 Расшифровать</button>
+            <button class="btn-clear" onclick="clearAll()">🗑️ Очистить</button>
+        </div>
+
+        <div class="result-box">
+            <label>✨ Результат:</label>
+            <textarea id="outputText" readonly placeholder="Здесь появится результат..."></textarea>
+        </div>
+
+        <div class="result-box">
+            <label>📊 Пошаговое преобразование (первые 20 символов):</label>
+            <textarea id="detailsText" readonly style="min-height:150px;font-size:11px;"
+                placeholder="Таблица с деталями шифрования..."></textarea>
+        </div>
+
+        <div class="result-box">
+            <label>🔢 Визуализация ключа:</label>
+            <div id="keyVisual" class="key-display"></div>
+        </div>
+    </div>
+
+    <script>
+        // Алфавит: 32 символа (Й→И, Ё→Е, пробел=31)
+        const ALPHABET = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ ';
+        const M = 32; // размер алфавита
+
+        // Инициализация сетки алфавита
+        function initAlphabetGrid() {
+            const grid = document.getElementById('alphabetGrid');
+            grid.innerHTML = '';
+            for (let i = 0; i < ALPHABET.length; i++) {
+                const item = document.createElement('div');
+                item.className = 'alphabet-item';
+                item.innerHTML = `<div class="num">${i}</div><div class="char">${ALPHABET[i] === ' ' ? '␣' : ALPHABET[i]}</div>`;
+                grid.appendChild(item);
+            }
+        }
+
+        // Подготовка текста: замена Ё→Е, Й→И, приведение к верхнему регистру
+        function normalizeText(text) {
+            return text.toUpperCase()
+                .replace(/Ё/g, 'Е')
+                .replace(/Й/g, 'И')
+                .replace(/[^А-Я ]/g, '');
+        }
+
+        // Валидация ключа (только цифры 0-9)
+        function validateKey(key) {
+            return /^[0-9]+$/.test(key) && key.length > 0;
+        }
+
+        // Шифрование: сдвиг вперёд на значение цифры ключа
+        function encryptChar(charCode, keyDigit) {
+            return (charCode + keyDigit) % M;
+        }
+
+        // Расшифрование: сдвиг назад на значение цифры ключа
+        function decryptChar(charCode, keyDigit) {
+            return ((charCode - keyDigit) % M + M) % M;
+        }
+
+        // Основная функция обработки
+        function process(mode) {
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.style.display = 'none';
+
+            const key = document.getElementById('keyInput').value.trim();
+            let input;
+            if (mode === 'decrypt') {
+                input = document.getElementById('outputText').value;
+            }
+            else {
+                input = document.getElementById('inputText').value;
+            }
+
+
+            // Валидация ключа
+            if (!validateKey(key)) {
+                errorMsg.textContent = `❌ Ключ должен содержать только цифры 0-9 и не быть пустым!`;
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            const normalized = normalizeText(input);
+            if (!normalized) {
+                errorMsg.textContent = `❌ Введите текст, содержащий русские буквы`;
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Визуализация ключа
+            visualizeKey(key, normalized.length);
+
+            let result = '';
+            let details = `Режим: ${mode === 'encrypt' ? 'ШИФРОВАНИЕ' : 'РАСШИФРОВАНИЕ'}\n`;
+            details += `Ключ: ${key}\n`;
+            details += `Длина сообщения: ${normalized.length} символов\n`;
+            details += `\nПошаговое преобразование:\n${'─'.repeat(50)}\n`;
+            details += `№ | Символ | Код | Ключ | Формула | Результат | Буква\n${'─'.repeat(50)}\n`;
+
+            for (let i = 0; i < normalized.length; i++) {
+                const char = normalized[i];
+                const charCode = ALPHABET.indexOf(char);
+
+                if (charCode === -1) continue;
+
+                const keyDigit = parseInt(key[i % key.length]);
+                let newCode, formula, operation;
+
+                if (mode === 'encrypt') {
+                    newCode = encryptChar(charCode, keyDigit);
+                    formula = `(${charCode}+${keyDigit}) mod ${M}`;
+                    operation = `${newCode}`;
+                } else {
+                    newCode = decryptChar(charCode, keyDigit);
+                    formula = `(${charCode}-${keyDigit}+${M}) mod ${M}`;
+                    operation = `${newCode}`;
+                }
+
+                result += ALPHABET[newCode];
+
+                // Показать только первые 20 символов в деталях
+                if (i < 20) {
+                    const displayChar = char === ' ' ? '␣' : char;
+                    const displayResult = ALPHABET[newCode] === ' ' ? '␣' : ALPHABET[newCode];
+                    details += `${(i + 1).toString().padStart(2)} | ${displayChar.padStart(6)} | ${charCode.toString().padStart(3)} | ${keyDigit} | ${formula.padStart(15)} | ${operation.padStart(9)} | ${displayResult}\n`;
+                }
+            }
+
+            if (normalized.length > 20) {
+                details += `\n... и ещё ${normalized.length - 20} символов`;
+            }
+
+            document.getElementById('outputText').value = result;
+            document.getElementById('detailsText').value = details;
+        }
+
+        // Визуализация ключа под текстом
+        function visualizeKey(key, textLength) {
+            const container = document.getElementById('keyVisual');
+            container.innerHTML = '';
+
+            for (let i = 0; i < Math.min(textLength, 40); i++) {
+                const digit = key[i % key.length];
+                const span = document.createElement('span');
+                span.className = 'key-digit';
+                span.textContent = digit;
+                span.title = `Позиция ${i + 1}: ключ[${i % key.length}] = ${digit}`;
+                container.appendChild(span);
+            }
+
+            if (textLength > 40) {
+                const more = document.createElement('span');
+                more.textContent = `... (всего ${textLength} цифр)`;
+                more.style.cssText = 'color:#aaa;font-size:11px;padding:4px;';
+                container.appendChild(more);
+            }
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputText').value = '';
+            document.getElementById('detailsText').value = '';
+            document.getElementById('keyVisual').innerHTML = '';
+            document.getElementById('errorMsg').style.display = 'none';
+        }
+
+        // Автопроверка ключа при вводе
+        document.getElementById('keyInput').addEventListener('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value && !/^[0-9]+$/.test(this.value)) {
+                this.style.borderColor = '#e74c3c';
+            } else {
+                this.style.borderColor = '#555';
+            }
+        });
+
+        // Инициализация
+        initAlphabetGrid();
+    </script>
+</body>
+
+</html>

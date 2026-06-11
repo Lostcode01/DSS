@@ -1,0 +1,86 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\\u0423\u0447\u0451\u0431\u0430\\\u043A\u0443\u0440\u04413\\\u0441\u0435\u043C\u0435\u0441\u0442\u04402\\\u0418\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u043E\u043D\u043D\u0430\u044F \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u044C \u0421\u0418\u0411\u0418\u041A\u0418\u041D\u0410 \u0414\u0410\u0412\u0418\u0414\u042E\u041A\\Program\\lab3\\DefenceModel\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A3CC37FB-C4D8-46DF-9326-E681B305B563}|DefenceModel\\DefenceModel.csproj|e:\\\u0443\u0447\u0451\u0431\u0430\\\u043A\u0443\u0440\u04413\\\u0441\u0435\u043C\u0435\u0441\u0442\u04402\\\u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u043E\u043D\u043D\u0430\u044F \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u044C \u0441\u0438\u0431\u0438\u043A\u0438\u043D\u0430 \u0434\u0430\u0432\u0438\u0434\u044E\u043A\\program\\lab3\\defencemodel\\defencemodel\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A3CC37FB-C4D8-46DF-9326-E681B305B563}|DefenceModel\\DefenceModel.csproj|solutionrelative:defencemodel\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A3CC37FB-C4D8-46DF-9326-E681B305B563}|DefenceModel\\DefenceModel.csproj|e:\\\u0443\u0447\u0451\u0431\u0430\\\u043A\u0443\u0440\u04413\\\u0441\u0435\u043C\u0435\u0441\u0442\u04402\\\u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u043E\u043D\u043D\u0430\u044F \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u044C \u0441\u0438\u0431\u0438\u043A\u0438\u043D\u0430 \u0434\u0430\u0432\u0438\u0434\u044E\u043A\\program\\lab3\\defencemodel\\defencemodel\\editmatrixwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A3CC37FB-C4D8-46DF-9326-E681B305B563}|DefenceModel\\DefenceModel.csproj|solutionrelative:defencemodel\\editmatrixwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A3CC37FB-C4D8-46DF-9326-E681B305B563}|DefenceModel\\DefenceModel.csproj|e:\\\u0443\u0447\u0451\u0431\u0430\\\u043A\u0443\u0440\u04413\\\u0441\u0435\u043C\u0435\u0441\u0442\u04402\\\u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u043E\u043D\u043D\u0430\u044F \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u044C \u0441\u0438\u0431\u0438\u043A\u0438\u043D\u0430 \u0434\u0430\u0432\u0438\u0434\u044E\u043A\\program\\lab3\\defencemodel\\defencemodel\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{A3CC37FB-C4D8-46DF-9326-E681B305B563}|DefenceModel\\DefenceModel.csproj|solutionrelative:defencemodel\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A3CC37FB-C4D8-46DF-9326-E681B305B563}|DefenceModel\\DefenceModel.csproj|e:\\\u0443\u0447\u0451\u0431\u0430\\\u043A\u0443\u0440\u04413\\\u0441\u0435\u043C\u0435\u0441\u0442\u04402\\\u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u043E\u043D\u043D\u0430\u044F \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u044C \u0441\u0438\u0431\u0438\u043A\u0438\u043D\u0430 \u0434\u0430\u0432\u0438\u0434\u044E\u043A\\program\\lab3\\defencemodel\\defencemodel\\editmatrixwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{A3CC37FB-C4D8-46DF-9326-E681B305B563}|DefenceModel\\DefenceModel.csproj|solutionrelative:defencemodel\\editmatrixwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "EditMatrixWindow.xaml.cs",
+              "DocumentMoniker": "E:\\\u0423\u0447\u0451\u0431\u0430\\\u043A\u0443\u0440\u04413\\\u0441\u0435\u043C\u0435\u0441\u0442\u04402\\\u0418\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u043E\u043D\u043D\u0430\u044F \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u044C \u0421\u0418\u0411\u0418\u041A\u0418\u041D\u0410 \u0414\u0410\u0412\u0418\u0414\u042E\u041A\\Program\\lab3\\DefenceModel\\DefenceModel\\EditMatrixWindow.xaml.cs",
+              "RelativeDocumentMoniker": "DefenceModel\\EditMatrixWindow.xaml.cs",
+              "ToolTip": "E:\\\u0423\u0447\u0451\u0431\u0430\\\u043A\u0443\u0440\u04413\\\u0441\u0435\u043C\u0435\u0441\u0442\u04402\\\u0418\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u043E\u043D\u043D\u0430\u044F \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u044C \u0421\u0418\u0411\u0418\u041A\u0418\u041D\u0410 \u0414\u0410\u0412\u0418\u0414\u042E\u041A\\Program\\lab3\\DefenceModel\\DefenceModel\\EditMatrixWindow.xaml.cs",
+              "RelativeToolTip": "DefenceModel\\EditMatrixWindow.xaml.cs",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAwwEYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-27T13:28:54.296Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "EditMatrixWindow.xaml",
+              "DocumentMoniker": "E:\\\u0423\u0447\u0451\u0431\u0430\\\u043A\u0443\u0440\u04413\\\u0441\u0435\u043C\u0435\u0441\u0442\u04402\\\u0418\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u043E\u043D\u043D\u0430\u044F \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u044C \u0421\u0418\u0411\u0418\u041A\u0418\u041D\u0410 \u0414\u0410\u0412\u0418\u0414\u042E\u041A\\Program\\lab3\\DefenceModel\\DefenceModel\\EditMatrixWindow.xaml",
+              "RelativeDocumentMoniker": "DefenceModel\\EditMatrixWindow.xaml",
+              "ToolTip": "E:\\\u0423\u0447\u0451\u0431\u0430\\\u043A\u0443\u0440\u04413\\\u0441\u0435\u043C\u0435\u0441\u0442\u04402\\\u0418\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u043E\u043D\u043D\u0430\u044F \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u044C \u0421\u0418\u0411\u0418\u041A\u0418\u041D\u0410 \u0414\u0410\u0412\u0418\u0414\u042E\u041A\\Program\\lab3\\DefenceModel\\DefenceModel\\EditMatrixWindow.xaml",
+              "RelativeToolTip": "DefenceModel\\EditMatrixWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-27T13:28:36.851Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "E:\\\u0423\u0447\u0451\u0431\u0430\\\u043A\u0443\u0440\u04413\\\u0441\u0435\u043C\u0435\u0441\u0442\u04402\\\u0418\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u043E\u043D\u043D\u0430\u044F \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u044C \u0421\u0418\u0411\u0418\u041A\u0418\u041D\u0410 \u0414\u0410\u0412\u0418\u0414\u042E\u041A\\Program\\lab3\\DefenceModel\\DefenceModel\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "DefenceModel\\MainWindow.xaml",
+              "ToolTip": "E:\\\u0423\u0447\u0451\u0431\u0430\\\u043A\u0443\u0440\u04413\\\u0441\u0435\u043C\u0435\u0441\u0442\u04402\\\u0418\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u043E\u043D\u043D\u0430\u044F \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u044C \u0421\u0418\u0411\u0418\u041A\u0418\u041D\u0410 \u0414\u0410\u0412\u0418\u0414\u042E\u041A\\Program\\lab3\\DefenceModel\\DefenceModel\\MainWindow.xaml",
+              "RelativeToolTip": "DefenceModel\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-27T13:26:35.105Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "E:\\\u0423\u0447\u0451\u0431\u0430\\\u043A\u0443\u0440\u04413\\\u0441\u0435\u043C\u0435\u0441\u0442\u04402\\\u0418\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u043E\u043D\u043D\u0430\u044F \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u044C \u0421\u0418\u0411\u0418\u041A\u0418\u041D\u0410 \u0414\u0410\u0412\u0418\u0414\u042E\u041A\\Program\\lab3\\DefenceModel\\DefenceModel\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "DefenceModel\\MainWindow.xaml.cs",
+              "ToolTip": "E:\\\u0423\u0447\u0451\u0431\u0430\\\u043A\u0443\u0440\u04413\\\u0441\u0435\u043C\u0435\u0441\u0442\u04402\\\u0418\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u043E\u043D\u043D\u0430\u044F \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u044C \u0421\u0418\u0411\u0418\u041A\u0418\u041D\u0410 \u0414\u0410\u0412\u0418\u0414\u042E\u041A\\Program\\lab3\\DefenceModel\\DefenceModel\\MainWindow.xaml.cs",
+              "RelativeToolTip": "DefenceModel\\MainWindow.xaml.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAQwCwAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-27T13:26:33.261Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
