@@ -1,69 +1,68 @@
 import streamlit as st
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
 
-# 1. Setup the dashboard layout
-st.set_page_config(page_title="Universal Sales DSS", layout="wide")
-st.title("📊 Universal Sales Decision Support System")
+# 1. Page Configuration
+st.set_page_config(page_title="Professional DSS", layout="wide")
+st.title("🎯 Advanced Decision Support System")
 
-# 2. Universal Data Loader
+# 2. Data Loading Engine
 @st.cache_data
-def load_data(file_path):
-    # Load the CSV
-    df = pd.read_csv(file_path)
-    # Strip whitespace from column names to prevent errors
+def load_data(file):
+    df = pd.read_csv(file)
     df.columns = df.columns.str.strip()
     return df
 
-# 3. Sidebar for File Upload (Enables Global Use)
-st.sidebar.header("Data Upload")
+# 3. Sidebar: Data & Weighting Controls
+st.sidebar.header("1. Upload Data")
 uploaded_file = st.sidebar.file_uploader("Upload your sales CSV", type=["csv"])
 
+# Load data (default fallback if no file uploaded)
 try:
     if uploaded_file is not None:
-        # Use uploaded file
         df = load_data(uploaded_file)
     else:
-        # Fallback to local file if no upload
-        df = load_data("sales_data.csv")
-    
-    # 4. Dynamic Column Classification
+        df = load_data("SMARTPHONE RETAIL OUTLET SALE DATA.csv")
+
+    st.sidebar.header("2. Analysis Configuration")
     cat_cols = df.select_dtypes(include=['object']).columns.tolist()
     num_cols = df.select_dtypes(include=['number']).columns.tolist()
-    
-    st.sidebar.header("Configuration")
-    selected_label = st.sidebar.selectbox("Select Item/Category Column", cat_cols)
-    selected_metrics = st.sidebar.multiselect("Select Metric Columns", num_cols, default=num_cols)
-    
-    # 5. Calculation Logic
-    df['Total_Performance'] = df[selected_metrics].sum(axis=1)
-    
-    st.subheader("Performance Overview")
-    col1, col2 = st.columns([1, 2])
-    
-    with col1:
-        st.write("### Data Preview")
-        st.dataframe(df[[selected_label] + selected_metrics].head())
+
+    group_col = st.sidebar.selectbox("Select Category to Group By", cat_cols)
+    metrics = st.sidebar.multiselect("Select Metrics to Weigh", num_cols, default=num_cols[:1])
+
+    if metrics:
+        # 4. Accuracy Engine: Normalization
+        # This scales values 0-1 so 'Amount' doesn't overpower 'Quantity'
+        scaler = MinMaxScaler()
+        df_norm = df.copy()
+        df_norm[metrics] = scaler.fit_transform(df[metrics])
+
+        st.sidebar.subheader("Adjust Metric Weights")
+        weights = {m: st.sidebar.slider(f"Weight: {m}", 0.0, 1.0, 0.5) for m in metrics}
+
+        # 5. Calculation
+        df_norm['Score'] = df_norm[metrics].multiply(pd.Series(weights), axis=1).sum(axis=1)
+        results = df_norm.groupby(group_col)['Score'].mean().sort_values(ascending=False)
+
+        # 6. Display Results
+        col1, col2 = st.columns([1, 2])
+        with col1:
+            st.write("### Recommended Ranking")
+            st.dataframe(results)
+        with col2:
+            st.write("### Performance Visualization")
+            st.bar_chart(results)
+
+        # 7. Strategic Advice
+        st.success(f"**Top Recommendation:** '{results.idxmax()}' is the optimal choice based on your selected weights.")
         
-    with col2:
-        st.write("### Sales Ranking")
-        ranking = df.groupby(selected_label)['Total_Performance'].sum().sort_values(ascending=False)
-        st.bar_chart(ranking)
-    
-    # 6. Actionable Decision Support
-    st.subheader("Decision Support Engine")
-    best_item = ranking.idxmax()
-    st.success(f"**Top Performer:** '{best_item}' has the highest aggregate sales.")
-    
-    avg_performance = ranking.mean()
-    underperformers = ranking[ranking < avg_performance]
-    
-    if not underperformers.empty:
-        st.warning(f"**Attention Needed:** The following items are performing below the average ({avg_performance:.0f}):")
-        st.write(underperformers)
-        st.info("Recommendation: Review marketing and supply for these items.")
-    else:
-        st.success("All items are performing above average.")
+        avg_score = results.mean()
+        underperformers = results[results < avg_score]
+        if not underperformers.empty:
+            st.warning("Items requiring attention (below average score):")
+            st.write(underperformers.index.tolist())
 
 except Exception as e:
-    st.error(f"Error: {e}")
-    st.info("Please ensure your CSV is formatted with column headers.")
+    st.error(f"Data Error: {e}")
+    st.info("Please ensure your CSV contains numeric columns for analysis.")
